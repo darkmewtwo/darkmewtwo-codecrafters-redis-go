@@ -8,6 +8,11 @@ import (
 	"os"
 )
 
+func handleConnection(conn net.Conn) {
+	defer conn.Close()
+	conn.Write([]byte("+PONG\r\n"))
+}
+
 func main() {
 	// You can use print statements as follows for debugging, they'll be visible when running tests.
 	fmt.Println("Logs from your program will appear here!")
@@ -34,7 +39,7 @@ func main() {
 		// fmt.Println(buffN)
 		request := string(buffer[:buffN])
 		fmt.Println(request)
-		conn.Write([]byte("+PONG\r\n"))
+		go handleConnection(conn)
 		// fmt.Println(buffer)
 		// cmd := strings.TrimSpace(request)
 		// cmd_parts := strings.Split(cmd, " ")
