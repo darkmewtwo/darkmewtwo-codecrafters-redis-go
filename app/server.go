@@ -34,6 +34,7 @@ func main() {
 
 		// fmt.Println(buffN)
 		request := string(buffer[:buffN])
+		fmt.Println(buffer)
 		cmd := strings.TrimSpace(request)
 		cmd_parts := strings.Split(cmd, " ")
 		fmt.Println(request, cmd, cmd_parts, (strings.TrimSpace(request)), len(request))
