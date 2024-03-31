@@ -36,7 +36,7 @@ func main() {
 		request := string(buffer[:buffN])
 		cmd := strings.TrimSpace(request)
 		cmd_parts := strings.Split(cmd, " ")
-		// fmt.Println(request, cmd, cmd_parts, (strings.TrimSpace(request)), len(request))
+		fmt.Println(request, cmd, cmd_parts, (strings.TrimSpace(request)), len(request))
 		// fmt.Println(request, reflect.TypeOf(request), (strings.TrimSpace(request) == "PING"), len(strings.TrimSpace(request)), len(request))
 		if strings.ToLower(cmd_parts[2]) == "ping" {
 			conn.Write([]byte("+PONG\r\n"))
