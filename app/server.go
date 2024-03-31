@@ -9,7 +9,7 @@ import (
 )
 
 func handleConnection(conn net.Conn) {
-	defer conn.Close()
+	// defer conn.Close()
 	// fmt.Println(conn)
 	buffer := make([]byte, 1024)
 	buffN, _ := conn.Read(buffer)
