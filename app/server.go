@@ -10,6 +10,13 @@ import (
 
 func handleConnection(conn net.Conn) {
 	// defer conn.Close()
+	// fmt.Println(conn)
+	buffer := make([]byte, 1024)
+	buffN, _ := conn.Read(buffer)
+
+	// fmt.Println(buffN)
+	request := string(buffer[:buffN])
+	fmt.Println(request)
 	conn.Write([]byte("+PONG\r\n"))
 }
 
@@ -25,20 +32,13 @@ func main() {
 		os.Exit(1)
 	}
 	defer l.Close()
-	conn, err := l.Accept()
 	for {
+		conn, err := l.Accept()
 		// defer conn.Close()
 		if err != nil {
 			fmt.Println("Error accepting connection: ", err.Error())
 			os.Exit(1)
 		}
-		// fmt.Println(conn)
-		buffer := make([]byte, 1024)
-		buffN, _ := conn.Read(buffer)
-
-		// fmt.Println(buffN)
-		request := string(buffer[:buffN])
-		fmt.Println(request)
 		go handleConnection(conn)
 		// fmt.Println(buffer)
 		// cmd := strings.TrimSpace(request)
