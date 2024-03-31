@@ -35,6 +35,7 @@ func main() {
 		// fmt.Println(buffN)
 		request := string(buffer[:buffN])
 		cmd := strings.TrimSpace(request)
+		fmt.Println(request)
 		// fmt.Println(request, reflect.TypeOf(request), (strings.TrimSpace(request) == "PING"), len(strings.TrimSpace(request)), len(request))
 		if cmd == "PING" {
 			conn.Write([]byte("+PONG\r\n"))
