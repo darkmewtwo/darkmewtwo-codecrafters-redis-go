@@ -11,13 +11,16 @@ import (
 func handleConnection(conn net.Conn) {
 	// defer conn.Close()
 	// fmt.Println(conn)
-	buffer := make([]byte, 1024)
-	buffN, _ := conn.Read(buffer)
+	for {
 
-	// fmt.Println(buffN)
-	request := string(buffer[:buffN])
-	fmt.Println(request)
-	conn.Write([]byte("+PONG\r\n"))
+		buffer := make([]byte, 1024)
+		buffN, _ := conn.Read(buffer)
+
+		// fmt.Println(buffN)
+		request := string(buffer[:buffN])
+		fmt.Println(request)
+		conn.Write([]byte("+PONG\r\n"))
+	}
 }
 
 func main() {
