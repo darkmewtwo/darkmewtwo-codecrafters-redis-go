@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	// Uncomment this block to pass the first stage
 	"net"
@@ -19,15 +20,31 @@ func handleConnection(conn net.Conn) {
 		// fmt.Println(buffN)
 		request := string(buffer[:buffN])
 		fmt.Println(request)
-		conn.Write([]byte("+PONG\r\n"))
+		cmd := strings.TrimSpace(request)
+		cmd_parts := strings.Split(cmd, "\\r\\n")
+		fmt.Println(cmd, cmd_parts)
+		keyword := strings.ToLower(cmd_parts[2])
+		switch keyword {
+
+		case "ping":
+			conn.Write([]byte("+PONG\r\n"))
+		case "echo":
+			message := "+" + cmd_parts[4]
+			conn.Write([]byte(message))
+		default:
+			conn.Write([]byte("-Invalid command"))
+		}
+
 	}
 }
 
 func main() {
 	// You can use print statements as follows for debugging, they'll be visible when running tests.
 	fmt.Println("Logs from your program will appear here!")
-
 	// Uncomment this block to pass the first stage
+
+	//
+
 	//
 	l, err := net.Listen("tcp", "0.0.0.0:6379")
 	if err != nil {
@@ -43,15 +60,5 @@ func main() {
 			os.Exit(1)
 		}
 		go handleConnection(conn)
-		// fmt.Println(buffer)
-		// cmd := strings.TrimSpace(request)
-		// cmd_parts := strings.Split(cmd, " ")
-		// fmt.Println(request, cmd, cmd_parts, (strings.TrimSpace(request)), len(request))
-		// // fmt.Println(request, reflect.TypeOf(request), (strings.TrimSpace(request) == "PING"), len(strings.TrimSpace(request)), len(request))
-		// if strings.ToLower(cmd_parts[2]) == "ping" {
-		// 	conn.Write([]byte("+PONG\r\n"))
-		// } else {
-		// 	conn.Write([]byte("+Unrecognized cmd\r\n"))
-		// }
 	}
 }
