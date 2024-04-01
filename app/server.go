@@ -23,7 +23,10 @@ func handleConnection(conn net.Conn) {
 		cmd := strings.TrimSpace(request)
 		cmd_parts := strings.Split(cmd, "\\r\\n")
 		fmt.Println(cmd, cmd_parts)
-		keyword := strings.ToLower(cmd_parts[2])
+		keyword := ""
+		if len(cmd_parts) > 1 {
+			keyword = strings.ToLower(cmd_parts[2])
+		}
 		switch keyword {
 
 		case "ping":
