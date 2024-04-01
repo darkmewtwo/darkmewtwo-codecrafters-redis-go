@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	// Uncomment this block to pass the first stage
-	"log"
+
 	"net"
 	"os"
 )
@@ -29,10 +29,12 @@ func handleConnection(conn net.Conn) {
 		if len(cmd_parts) > 1 {
 			keyword = strings.ToLower(cmd_parts[2])
 		}
-		log.Println(keyword)
+		// log.Println(keyword)
 		switch keyword {
 
 		case "ping":
+			conn.Write([]byte("+PONG\r\n"))
+		case "redis-cli ping":
 			conn.Write([]byte("+PONG\r\n"))
 		case "echo":
 			message := "+" + cmd_parts[4]
