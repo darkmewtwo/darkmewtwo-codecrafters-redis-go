@@ -21,8 +21,9 @@ func handleConnection(conn net.Conn) {
 		// fmt.Println(buffN)
 		request := string(buffer[:buffN])
 		fmt.Println(strings.Fields(request), "M")
-		cmd := strings.TrimSpace(request)
-		cmd_parts := strings.Split(cmd, "\\r\\n")
+		// cmd := strings.TrimSpace(request)
+		// cmd_parts := strings.Split(cmd, "\\r\\n")
+		cmd_parts := strings.Fields(request)
 		// fmt.Println(cmd, cmd_parts)
 		// log.Println(cmd, cmd_parts)
 		keyword := ""
