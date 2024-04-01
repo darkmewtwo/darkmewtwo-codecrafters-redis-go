@@ -40,7 +40,7 @@ func handleConnection(conn net.Conn) {
 			message := "+" + cmd_parts[4]
 			conn.Write([]byte(message))
 		default:
-			conn.Write([]byte("-PONG\r\n"))
+			conn.Write([]byte("+PONG\r\n"))
 		}
 
 	}
