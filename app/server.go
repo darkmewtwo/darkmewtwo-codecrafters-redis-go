@@ -44,16 +44,13 @@ func setData(key string, value string, expiry *string) {
 
 func getData(key string) (string, string) {
 	value, exists := dataStore[key]
-	fmt.Println(value)
 	if exists {
 		valueSlice := strings.Split(value, ":")
-		if len(valueSlice) == 3 {
-			now := time.Now().UnixMilli()
-			setTime, _ := strconv.Atoi(valueSlice[1])
-			expiry, _ := strconv.Atoi(valueSlice[2])
-			if (now - int64(setTime)) > int64(expiry) {
-				return BULK_STRINGS, BULK_NULL_STRING
-			}
+		now := time.Now().UnixMilli()
+		setTime, _ := strconv.Atoi(valueSlice[1])
+		expiry, _ := strconv.Atoi(valueSlice[2])
+		if expiry > 0 && (now-int64(setTime)) > int64(expiry) {
+			return BULK_STRINGS, BULK_NULL_STRING
 		}
 		return SIMPLE_STRING, valueSlice[0]
 	} else {
