@@ -29,6 +29,7 @@ func handleConnection(conn net.Conn) {
 		if len(cmd_parts) > 1 {
 			keyword = strings.ToLower(cmd_parts[2])
 		}
+		log.Println("32", keyword)
 		switch keyword {
 
 		case "ping":
