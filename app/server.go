@@ -20,7 +20,7 @@ func handleConnection(conn net.Conn) {
 
 		// fmt.Println(buffN)
 		request := string(buffer[:buffN])
-		fmt.Println(strings.Fields(request), "M")
+		fmt.Println(strings.Fields(request), request, "M")
 		// cmd := strings.TrimSpace(request)
 		// cmd_parts := strings.Split(cmd, "\\r\\n")
 		cmd_parts := strings.Fields(request)
@@ -34,8 +34,6 @@ func handleConnection(conn net.Conn) {
 		switch keyword {
 
 		case "ping":
-			conn.Write([]byte("+PONG\r\n"))
-		case "redis-cli ping":
 			conn.Write([]byte("+PONG\r\n"))
 		case "echo":
 			message := "+" + cmd_parts[4] + "\r\n"
