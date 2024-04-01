@@ -38,7 +38,7 @@ func handleConnection(conn net.Conn) {
 		case "redis-cli ping":
 			conn.Write([]byte("+PONG\r\n"))
 		case "echo":
-			message := "+" + cmd_parts[4]
+			message := "+" + cmd_parts[4] + "\r\n"
 			conn.Write([]byte(message))
 		default:
 			conn.Write([]byte("+PONG\r\n"))
