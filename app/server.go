@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
+	"time"
 
 	// Uncomment this block to pass the first stage
 
@@ -24,6 +26,7 @@ var dataStore map[string]string
 
 func init() {
 	dataStore = make(map[string]string)
+	// dataExpiry
 }
 
 func constructResponseMessage(resp_data_type string, data string) string {
@@ -32,15 +35,27 @@ func constructResponseMessage(resp_data_type string, data string) string {
 	return message
 }
 
-func setData(key string, value string) {
-	dataStore[key] = value
+func setData(key string, value string, expiry *string) {
+	now := time.Now().UnixMilli()
+	fmt.Println(key, value, expiry, *expiry)
+	dataStore[key] = value + ":" + strconv.FormatInt(now, 10) + ":" + *expiry
 	// return true
 }
 
 func getData(key string) (string, string) {
 	value, exists := dataStore[key]
+	fmt.Println(value)
 	if exists {
-		return SIMPLE_STRING, value
+		valueSlice := strings.Split(value, ":")
+		if len(valueSlice) == 3 {
+			now := time.Now().UnixMilli()
+			setTime, _ := strconv.Atoi(valueSlice[1])
+			expiry, _ := strconv.Atoi(valueSlice[2])
+			if (now - int64(setTime)) > int64(expiry) {
+				return BULK_STRINGS, BULK_NULL_STRING
+			}
+		}
+		return SIMPLE_STRING, valueSlice[0]
 	} else {
 		return BULK_STRINGS, BULK_NULL_STRING
 	}
@@ -74,7 +89,13 @@ func handleConnection(conn net.Conn) {
 		case "echo":
 			conn.Write([]byte(constructResponseMessage(SIMPLE_STRING, cmd_parts[4])))
 		case "set":
-			setData(cmd_parts[4], cmd_parts[6])
+			var expiry string
+			if len(cmd_parts) > 8 {
+				expiry = cmd_parts[10]
+			} else {
+				_ = expiry
+			}
+			setData(cmd_parts[4], cmd_parts[6], &expiry)
 			conn.Write([]byte(constructResponseMessage(SIMPLE_STRING, "OK")))
 		case "get":
 			dataType, value := getData(cmd_parts[4])
