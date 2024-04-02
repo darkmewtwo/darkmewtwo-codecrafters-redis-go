@@ -22,12 +22,13 @@ const (
 	BULK_NULL_STRING = "-1"
 )
 
-var role string
+var serverMetaData map[string]string
 var dataStore map[string]string
 
 func init() {
 	dataStore = make(map[string]string)
-	role = "master"
+	serverMetaData = make(map[string]string)
+	serverMetaData["role"] = "master"
 	// dataExpiry
 }
 
@@ -60,6 +61,18 @@ func getData(key string) (string, string) {
 	}
 }
 
+func getServerMetaData() string {
+	var metaData string
+	// metaData := BULK_STRINGS
+
+	for key := range serverMetaData {
+		keyValue := key + ":" + serverMetaData[key]
+		fmt.Println("eruirf")
+		metaData += strconv.Itoa(len(keyValue)) + "\r\n" + keyValue + "\r\n"
+	}
+	return metaData
+}
+
 func handleConnection(conn net.Conn) {
 	// defer conn.Close()
 	// fmt.Println(conn)
@@ -83,7 +96,8 @@ func handleConnection(conn net.Conn) {
 		// fmt.Println(keyword)
 		switch keyword {
 		case "info":
-			conn.Write([]byte(constructResponseMessage(BULK_STRINGS, strconv.Itoa(len(role))+role)))
+			metaData := getServerMetaData()
+			conn.Write([]byte(constructResponseMessage(BULK_STRINGS, metaData)))
 		case "ping":
 			conn.Write([]byte(constructResponseMessage(SIMPLE_STRING, "PONG")))
 		case "echo":
@@ -123,7 +137,7 @@ func main() {
 			case "--port":
 				port = args[index+1]
 			case "--replicaof":
-				role = "slave"
+				serverMetaData["role"] = "slave"
 
 			}
 		}
