@@ -22,10 +22,12 @@ const (
 	BULK_NULL_STRING = "-1"
 )
 
+var role string
 var dataStore map[string]string
 
 func init() {
 	dataStore = make(map[string]string)
+	role = "master"
 	// dataExpiry
 }
 
@@ -80,7 +82,8 @@ func handleConnection(conn net.Conn) {
 		}
 		// fmt.Println(keyword)
 		switch keyword {
-
+		case "info":
+			conn.Write([]byte(constructResponseMessage(BULK_STRINGS, string(len(role))+role)))
 		case "ping":
 			conn.Write([]byte(constructResponseMessage(SIMPLE_STRING, "PONG")))
 		case "echo":
@@ -119,6 +122,9 @@ func main() {
 			switch arg {
 			case "--port":
 				port = args[index+1]
+			case "--replicaof":
+				role = "slave"
+
 			}
 		}
 	}
