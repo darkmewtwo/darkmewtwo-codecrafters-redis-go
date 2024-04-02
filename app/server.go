@@ -83,7 +83,7 @@ func handleConnection(conn net.Conn) {
 		// fmt.Println(keyword)
 		switch keyword {
 		case "info":
-			conn.Write([]byte(constructResponseMessage(BULK_STRINGS, string(len(role))+role)))
+			conn.Write([]byte(constructResponseMessage(BULK_STRINGS, strconv.Itoa(len(role))+role)))
 		case "ping":
 			conn.Write([]byte(constructResponseMessage(SIMPLE_STRING, "PONG")))
 		case "echo":
