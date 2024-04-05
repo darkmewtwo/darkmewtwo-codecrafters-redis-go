@@ -73,7 +73,7 @@ func getData(key string) (string, string) {
 	}
 }
 
-func getServerMetaData() string {
+func getServerMetaData(dataMap map[string]string) string {
 	var metaData string
 	// metaData := BULK_STRINGS
 
@@ -108,8 +108,18 @@ func handleConnection(conn net.Conn) {
 		// fmt.Println(keyword)
 		switch keyword {
 		case "info":
-			metaData := getServerMetaData()
-			conn.Write([]byte(constructResponseMessage(BULK_STRINGS, metaData)))
+			if len(cmd_parts) > 2 {
+				copiedMap := make(map[string]string)
+				for key, value := range serverMetaData {
+					copiedMap[key] = value
+				}
+				delete(copiedMap, "role")
+				metaData := getServerMetaData(copiedMap)
+				conn.Write([]byte(constructResponseMessage(BULK_STRINGS, metaData)))
+			} else {
+				metaData := getServerMetaData(serverMetaData)
+				conn.Write([]byte(constructResponseMessage(BULK_STRINGS, metaData)))
+			}
 		case "ping":
 			conn.Write([]byte(constructResponseMessage(SIMPLE_STRING, "PONG")))
 		case "echo":
