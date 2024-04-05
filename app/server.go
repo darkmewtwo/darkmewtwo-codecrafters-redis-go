@@ -77,8 +77,8 @@ func getServerMetaData(dataMap map[string]string) string {
 	var metaData string
 	// metaData := BULK_STRINGS
 
-	for key := range serverMetaData {
-		keyValue := key + ":" + serverMetaData[key]
+	for key := range dataMap {
+		keyValue := key + ":" + dataMap[key]
 		fmt.Println(key)
 		metaData += strconv.Itoa(len(keyValue)) + "\r\n" + keyValue + "\r\n"
 	}
