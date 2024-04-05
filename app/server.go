@@ -79,7 +79,7 @@ func getServerMetaData() string {
 
 	for key := range serverMetaData {
 		keyValue := key + ":" + serverMetaData[key]
-		fmt.Println("eruirf")
+		fmt.Println(key)
 		metaData += strconv.Itoa(len(keyValue)) + "\r\n" + keyValue + "\r\n"
 	}
 	return metaData
