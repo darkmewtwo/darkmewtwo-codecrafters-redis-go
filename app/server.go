@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"strconv"
 	"strings"
 	"time"
@@ -24,6 +25,17 @@ const (
 
 var serverMetaData map[string]string
 var dataStore map[string]string
+
+func generateRandomServerId() string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	rand.Seed(time.Now().UnixNano())
+	length := len(charset)
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[rand.Intn(len(charset))]
+	}
+	return string(b)
+}
 
 func init() {
 	dataStore = make(map[string]string)
@@ -141,6 +153,11 @@ func main() {
 
 			}
 		}
+	}
+	if serverMetaData["role"] == "master" {
+		serverMetaData["master_replid"] = generateRandomServerId()
+		serverMetaData["master_repl_offset"] = "0"
+
 	}
 	fmt.Println(port)
 	host := "0.0.0.0:" + port
